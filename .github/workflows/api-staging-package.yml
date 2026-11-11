@@ -1,0 +1,28 @@
+name: Staging API package
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    name: Verify and package API
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.0.x
+      - run: dotnet restore CareerGoat.slnx
+      - run: dotnet format CareerGoat.slnx --verify-no-changes --no-restore
+      - run: dotnet build CareerGoat.slnx --no-restore
+      - run: dotnet test CareerGoat.slnx --no-build
+      - run: dotnet publish src/CareerGoat.Api/CareerGoat.Api.csproj --configuration Release --no-restore --output artifacts/api
+      - uses: actions/upload-artifact@v4
+        with:
+          name: careergoat-api-staging
+          path: artifacts/api/
+          if-no-files-found: error
+          retention-days: 7

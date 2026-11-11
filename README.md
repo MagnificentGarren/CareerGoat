@@ -107,11 +107,21 @@ automatically. Local behavior comes from the Development launch profile and
 in Phase 0; never put service-role keys, database passwords, or Gemini keys in
 the Angular client.
 
+For staging, follow [the staging setup and verification guide](./docs/STAGING.md).
+The frontend reads the public `CAREERGOAT_API_BASE_URL` setting at build time;
+the API requires `ASPNETCORE_ENVIRONMENT=Staging` and the exact
+`Frontend__AllowedOrigins__0` origin in the API host settings. Neither value is
+a secret. A host-specific API deployment cannot be configured until a free
+.NET host is selected and verified.
+
 ## Current status and next owner actions
 
 Phase 0 code scaffolding is present. To complete local run evidence, start
 Docker Desktop and install the Supabase CLI, then follow **Run locally** and
-**Build, format, lint, and test** above. The project is not connected to a
-GitHub remote yet. Create a GitHub repository and connect this local folder
-before relying on pull-request CI. Do not create paid infrastructure or
-production accounts for Phase 0.
+**Build, format, lint, and test** above. This checkout has an `origin` remote;
+push the reviewed changes and confirm GitHub Actions is enabled before relying
+on CI evidence.
+Do not create paid infrastructure or production accounts for Phase 0. Phase 1
+staging code/configuration is prepared; provider setup and API-host-specific
+deployment remain owner actions. Keep the existing landing-page deployment
+unchanged.

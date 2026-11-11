@@ -1,26 +1,23 @@
 <header class="topbar">
   <a class="brand" href="/" aria-label="CareerGoat home"> Career<span>Goat</span> </a>
-  <span class="phase-label">Phase 0 · Local setup</span>
+  <span class="phase-label">Phase 1 · Staging shell</span>
 </header>
 
 <main class="panel">
-  <p class="eyebrow">Local development shell</p>
+  <p class="eyebrow">Staging-ready development shell</p>
   <h1>Build your next move.</h1>
   <p class="intro">
-    The Angular client and .NET API are ready for local development. No paid AI credentials are used
-    by this starter.
+    The Angular client checks the configured .NET API. No paid AI credentials or external AI calls
+    are used by this starter.
   </p>
 
   <section class="status" aria-labelledby="status-heading">
-    <h2 id="status-heading">Development services</h2>
+    <h2 id="status-heading">Service status</h2>
     <ul>
       <li>
         <span>API health</span>
-        <a href="http://localhost:5219/health">Check local API</a>
-      </li>
-      <li>
-        <span>Sample analysis</span>
-        <a href="http://localhost:5219/api/v1/demo-analysis"> Open fake AI response </a>
+        <a [href]="apiHealthUrl" target="_blank" rel="noopener noreferrer">Open health endpoint</a>
+        <strong aria-live="polite">{{ apiHealthStatus() }}</strong>
       </li>
       <li>
         <span>AI provider</span>
@@ -30,6 +27,6 @@
   </section>
 
   <p class="note">
-    Your existing static pages remain in the project root and have not been migrated or changed.
+    The existing static landing pages remain available and have not been migrated or changed.
   </p>
 </main>
