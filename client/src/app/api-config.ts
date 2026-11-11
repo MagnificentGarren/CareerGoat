@@ -4,6 +4,8 @@ declare global {
   interface Window {
     careerGoatConfig?: {
       apiBaseUrl?: string;
+      supabaseUrl?: string;
+      supabaseAnonKey?: string;
     };
   }
 }

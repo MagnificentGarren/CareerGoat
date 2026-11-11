@@ -108,20 +108,21 @@ in Phase 0; never put service-role keys, database passwords, or Gemini keys in
 the Angular client.
 
 For staging, follow [the staging setup and verification guide](./docs/STAGING.md).
-The frontend reads the public `CAREERGOAT_API_BASE_URL` setting at build time;
-the API requires `ASPNETCORE_ENVIRONMENT=Staging` and the exact
-`Frontend__AllowedOrigins__0` origin in the API host settings. Neither value is
-a secret. A Render Dockerfile is prepared for the staging API; review the
-current free-plan usage and overage terms before creating a Render service.
+The frontend reads the public `CAREERGOAT_API_BASE_URL`, Supabase URL, and anon
+key at build time. The API requires `ASPNETCORE_ENVIRONMENT=Staging`, the exact
+`Frontend__AllowedOrigins__0` origin, Supabase Auth URL/key, and a secret
+PostgreSQL connection string in the API host settings. The anon key is public;
+the database connection string is not. Apply database changes using the
+versioned Supabase migration instructions in the staging guide. A Render
+Dockerfile is prepared for the staging API; review current free-plan usage and
+overage terms before creating a Render service.
 
 ## Current status and next owner actions
 
-Phase 0 code scaffolding is present. To complete local run evidence, start
-Docker Desktop and install the Supabase CLI, then follow **Run locally** and
-**Build, format, lint, and test** above. This checkout has an `origin` remote;
-push the reviewed changes and confirm GitHub Actions is enabled before relying
-on CI evidence.
-Do not create paid infrastructure or production accounts for Phase 0. Phase 1
-staging code/configuration is prepared; provider setup and API-host-specific
-deployment remain owner actions. Keep the existing landing-page deployment
-unchanged.
+The project now includes Phase 2 authentication, profile/target-role APIs and
+UI, an ownership/RLS migration, and cross-user API tests. To complete local
+and staging evidence, start Docker Desktop and install the Supabase CLI, then
+follow **Run locally**, **Build, format, lint, and test**, and the Phase 2
+staging steps. Provider setup, OAuth configuration, migration application,
+and sign-in/deletion UX review remain owner actions. Keep the existing
+landing-page deployment unchanged.

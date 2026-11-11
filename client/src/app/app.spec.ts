@@ -1,7 +1,10 @@
 import { TestBed } from '@angular/core/testing';
+import { signal } from '@angular/core';
 import { of } from 'rxjs';
 import { App } from './app';
 import { ApiHealthService } from './api-health.service';
+import { AuthService } from './auth.service';
+import { TargetRoleService } from './target-role.service';
 
 describe('App', () => {
   beforeEach(async () => {
@@ -13,6 +16,31 @@ describe('App', () => {
           useValue: {
             healthUrl: 'https://careergoat-api.example/health',
             check: () => of(undefined),
+          },
+        },
+        {
+          provide: AuthService,
+          useValue: {
+            session: signal(null),
+            ready: signal(true),
+            configurationError: signal(null),
+            signIn: vi.fn(),
+            signUp: vi.fn(),
+            signInWithGoogle: vi.fn(),
+            signOut: vi.fn(),
+            getAccessToken: vi.fn().mockResolvedValue(null),
+          },
+        },
+        {
+          provide: TargetRoleService,
+          useValue: {
+            getProfile: vi.fn(),
+            updateProfile: vi.fn(),
+            list: vi.fn(),
+            get: vi.fn(),
+            create: vi.fn(),
+            update: vi.fn(),
+            delete: vi.fn(),
           },
         },
       ],

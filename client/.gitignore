@@ -3,6 +3,7 @@
 # Compiled output
 /dist
 /tmp
+/public/runtime-config.local.js
 /out-tsc
 /bazel-out
 

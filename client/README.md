@@ -4,13 +4,21 @@ This project was generated using [Angular CLI](https://github.com/angular/angula
 
 ## Development server
 
-To start a local development server, run:
+Set the local Supabase URL and anon key in PowerShell, then start the server.
+The `prestart` script writes them to an ignored local runtime file:
 
-```bash
-ng serve
+```powershell
+$env:CAREERGOAT_SUPABASE_URL = "http://127.0.0.1:54321"
+$env:CAREERGOAT_SUPABASE_ANON_KEY = "<local anon key>"
+npm start
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Configure the API process and local database separately as described in the
+repository's [staging and local setup guide](../docs/STAGING.md). Never put
+database credentials in the client or its runtime configuration.
+
+Once the server is running, open `http://localhost:4200/`. The application
+automatically reloads whenever you modify source files.
 
 ## Code scaffolding
 

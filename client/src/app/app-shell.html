@@ -1,15 +1,166 @@
 <header class="topbar">
-  <a class="brand" href="/" aria-label="CareerGoat home"> Career<span>Goat</span> </a>
-  <span class="phase-label">Phase 1 · Staging shell</span>
+  <a class="brand" href="/" aria-label="CareerGoat home">Career<span>Goat</span></a>
+  <span class="phase-label">Phase 2 · Secure workspace</span>
 </header>
 
 <main class="panel">
-  <p class="eyebrow">Staging-ready development shell</p>
+  <p class="eyebrow">CareerGoat workspace</p>
   <h1>Build your next move.</h1>
   <p class="intro">
-    The Angular client checks the configured .NET API. No paid AI credentials or external AI calls
-    are used by this starter.
+    Save your profile and target roles in a private workspace. Your records are only available to
+    your signed-in account.
   </p>
+
+  @if (!auth.ready()) {
+    <p role="status">Restoring your secure session…</p>
+  } @else if (!auth.session()) {
+    <section class="card auth-card" aria-labelledby="auth-heading">
+      <h2 id="auth-heading">{{ isSignUp() ? 'Create your account' : 'Sign in' }}</h2>
+      @if (auth.configurationError()) {
+        <p class="message error" role="alert">{{ auth.configurationError() }}</p>
+      }
+      <form (ngSubmit)="submitAuth()">
+        <label for="email">Email</label>
+        <input
+          id="email"
+          name="email"
+          type="email"
+          autocomplete="email"
+          [(ngModel)]="email"
+          required
+        />
+        <label for="password">Password</label>
+        <input
+          id="password"
+          name="password"
+          type="password"
+          [attr.autocomplete]="isSignUp() ? 'new-password' : 'current-password'"
+          [(ngModel)]="password"
+          minlength="8"
+          required
+        />
+        <button type="submit" [disabled]="saving() || !!auth.configurationError()">
+          {{ saving() ? 'Please wait…' : isSignUp() ? 'Create account' : 'Sign in' }}
+        </button>
+      </form>
+      <button class="secondary" type="button" (click)="signInWithGoogle()">
+        Continue with Google
+      </button>
+      <button class="text-button" type="button" (click)="isSignUp.set(!isSignUp())">
+        {{ isSignUp() ? 'Already have an account? Sign in' : 'New here? Create an account' }}
+      </button>
+    </section>
+  } @else {
+    <div class="workspace-heading">
+      <div>
+        <p class="eyebrow">Signed in</p>
+        <p class="account-email">{{ profile()?.email ?? auth.session()?.user?.email }}</p>
+      </div>
+      <button class="secondary sign-out" type="button" (click)="signOut()">Sign out</button>
+    </div>
+
+    @if (loadingAccount()) {
+      <p role="status">Loading your profile and target roles…</p>
+    } @else {
+      <section class="card" aria-labelledby="profile-heading">
+        <h2 id="profile-heading">Your profile</h2>
+        <form (ngSubmit)="saveProfile()">
+          <label for="display-name">Display name</label>
+          <input
+            id="display-name"
+            name="displayName"
+            maxlength="120"
+            [(ngModel)]="displayName"
+            [ngModelOptions]="{ standalone: true }"
+          />
+          <button type="submit" [disabled]="saving()">Save profile</button>
+        </form>
+      </section>
+
+      <section class="card roles-card" aria-labelledby="roles-heading">
+        <div class="section-heading">
+          <h2 id="roles-heading">Target roles</h2>
+          <button type="button" (click)="startCreateRole()">Add target role</button>
+        </div>
+
+        @if (editorOpen) {
+          <form class="role-form" (ngSubmit)="saveRole()">
+            <h3>{{ editingRoleId ? 'Edit target role' : 'New target role' }}</h3>
+            <label for="role-title">Role title</label>
+            <input
+              id="role-title"
+              name="roleTitle"
+              maxlength="160"
+              [(ngModel)]="roleDraft.title"
+              required
+            />
+            <label for="role-company">Company (optional)</label>
+            <input
+              id="role-company"
+              name="roleCompany"
+              maxlength="160"
+              [(ngModel)]="roleDraft.company"
+            />
+            <label for="role-description">Job description</label>
+            <textarea
+              id="role-description"
+              name="roleDescription"
+              rows="6"
+              maxlength="12000"
+              [(ngModel)]="roleDraft.description"
+              required
+            ></textarea>
+            <div class="button-row">
+              <button type="submit" [disabled]="saving()">
+                {{ saving() ? 'Saving…' : 'Save target role' }}
+              </button>
+              <button class="secondary" type="button" (click)="cancelRoleEdit()">Cancel</button>
+            </div>
+          </form>
+        } @else if (selectedRole(); as role) {
+          <article class="role-detail">
+            <h3>{{ role.title }}</h3>
+            @if (role.company) {
+              <p class="company">{{ role.company }}</p>
+            }
+            <p class="description">{{ role.description }}</p>
+            <div class="button-row">
+              <button type="button" (click)="startEditRole(role)">Edit</button>
+              <button class="danger" type="button" (click)="deleteRole(role)">Delete</button>
+              <button class="secondary" type="button" (click)="selectedRole.set(null)">
+                Close
+              </button>
+            </div>
+          </article>
+        } @else if (targetRoles().length === 0) {
+          <p class="empty-state">No target roles yet. Add one to get started.</p>
+        } @else {
+          <ul class="role-list">
+            @for (role of targetRoles(); track role.id) {
+              <li>
+                <button class="role-link" type="button" (click)="openRole(role)">
+                  <strong>{{ role.title }}</strong>
+                  @if (role.company) {
+                    <span>{{ role.company }}</span>
+                  }
+                </button>
+                <button class="danger compact" type="button" (click)="deleteRole(role)">
+                  Delete
+                </button>
+              </li>
+            }
+          </ul>
+        }
+      </section>
+    }
+  }
+
+  @if (errorMessage()) {
+    <p class="message error" role="alert">{{ errorMessage() }}</p>
+  }
+  @if (statusMessage()) {
+    <p class="message success" role="status">{{ statusMessage() }}</p>
+  }
 
   <section class="status" aria-labelledby="status-heading">
     <h2 id="status-heading">Service status</h2>
@@ -19,14 +170,12 @@
         <a [href]="apiHealthUrl" target="_blank" rel="noopener noreferrer">Open health endpoint</a>
         <strong aria-live="polite">{{ apiHealthStatus() }}</strong>
       </li>
-      <li>
-        <span>AI provider</span>
-        <strong>Fake · no external calls</strong>
-      </li>
+      <li><span>AI provider</span><strong>Fake · no external calls</strong></li>
     </ul>
   </section>
 
   <p class="note">
-    The existing static landing pages remain available and have not been migrated or changed.
+    Account deletion is not available in this phase. Target-role deletion removes only the selected
+    role; account-wide data deletion expectations must be confirmed before that flow is added.
   </p>
 </main>
