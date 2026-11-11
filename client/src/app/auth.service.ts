@@ -60,7 +60,7 @@ export class AuthService {
   async signInWithGoogle(): Promise<void> {
     const { error } = await this.requireClient().auth.signInWithOAuth({
       provider: 'google',
-      options: { redirectTo: window.location.origin },
+      options: { redirectTo: `${window.location.origin}/app` },
     });
     if (error) throw error;
   }

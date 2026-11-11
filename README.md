@@ -2,8 +2,18 @@
 
 CareerGoat is an early-career job-search companion. This repository contains
 the Angular development shell, a .NET API, test projects, and Supabase's local
-development configuration. The existing `summit-blue.html` landing page and
-`construction.html` page remain unchanged in the project root.
+development configuration. The Angular client now contains the CareerGoat
+landing page and public About, Guide, and Contact pages. The original
+`summit-blue.html` reference, its background asset, and the `construction.html`
+page remain unchanged in the project root.
+
+## Website pages
+
+The Angular website provides the public landing page at `/`, plus `/about`,
+`/guide`, and `/contact`. Sign-in is at `/auth`; signed-in users reach their
+profile and target roles at `/app`. The Guide labels CV analysis and interview
+practice as planned work; those features are not available in the current
+workspace yet.
 
 ## Phase 0 defaults and budget
 

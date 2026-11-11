@@ -1,16 +1,18 @@
 import { TestBed } from '@angular/core/testing';
 import { signal } from '@angular/core';
+import { provideRouter } from '@angular/router';
 import { of } from 'rxjs';
-import { App } from './app';
 import { ApiHealthService } from './api-health.service';
 import { AuthService } from './auth.service';
 import { TargetRoleService } from './target-role.service';
+import { Workspace } from './workspace';
 
-describe('App', () => {
+describe('Workspace', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [App],
+      imports: [Workspace],
       providers: [
+        provideRouter([]),
         {
           provide: ApiHealthService,
           useValue: {
@@ -48,13 +50,13 @@ describe('App', () => {
   });
 
   it('should create the app', () => {
-    const fixture = TestBed.createComponent(App);
+    const fixture = TestBed.createComponent(Workspace);
     const app = fixture.componentInstance;
     expect(app).toBeTruthy();
   });
 
   it('should render the staging shell and configured API status', async () => {
-    const fixture = TestBed.createComponent(App);
+    const fixture = TestBed.createComponent(Workspace);
     await fixture.whenStable();
     const compiled = fixture.nativeElement as HTMLElement;
     expect(compiled.querySelector('h1')?.textContent).toContain('Build your next move.');

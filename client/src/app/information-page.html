@@ -1,0 +1,52 @@
+<header class="topbar shell">
+  <a class="brand" routerLink="/" aria-label="CareerGoat home">
+    <span class="brand-mark" aria-hidden="true">🐐</span>
+    <span class="brand-name">CAREER<span>GOAT</span></span>
+  </a>
+  <nav class="top-links" aria-label="Main navigation">
+    <a class="nav-link" routerLink="/">Home</a>
+    <a class="nav-link" routerLink="/about">About</a>
+    <a class="nav-link" routerLink="/guide">Guide</a>
+    <a class="nav-link" routerLink="/contact">Contact</a>
+    <a class="nav-link nav-cta" routerLink="/auth">Sign in <span aria-hidden="true">↗</span></a>
+  </nav>
+</header>
+
+<main class="info-main shell">
+  <div class="section-label">{{ content.eyebrow }}</div>
+  <h1 class="info-title">{{ content.title }}</h1>
+  <p class="section-intro info-intro">{{ content.intro }}</p>
+
+  <div class="info-grid">
+    @for (section of content.sections; track section.heading) {
+      <article class="move-card info-card">
+        @if (section.status) {
+          <span class="move-number">{{ section.status }}</span>
+        }
+        <h2>{{ section.heading }}</h2>
+        <p>{{ section.body }}</p>
+        @if (section.points?.length) {
+          <ul>
+            @for (point of section.points; track point) {
+              <li>{{ point }}</li>
+            }
+          </ul>
+        }
+      </article>
+    }
+  </div>
+
+  <a class="button button-primary info-cta" routerLink="/auth">
+    <span>Get started</span><span aria-hidden="true">↗</span>
+  </a>
+</main>
+
+<footer class="footer shell">
+  <span><strong>CAREERGOAT</strong> · TAILOR YOUR CV. OWN YOUR NEXT MOVE.</span>
+  <div class="footer-links">
+    <a routerLink="/about">About</a>
+    <a routerLink="/guide">Guide</a>
+    <a routerLink="/contact">Contact</a>
+    <a routerLink="/" fragment="top">Home</a>
+  </div>
+</footer>
