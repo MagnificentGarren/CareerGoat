@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/CareerGoat.Api/CareerGoat.Api.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/CareerGoat.ApiTests/CareerGoat.ApiTests.csproj" />
+    <Project Path="tests/CareerGoat.UnitTests/CareerGoat.UnitTests.csproj" />
+  </Folder>
+</Solution>
