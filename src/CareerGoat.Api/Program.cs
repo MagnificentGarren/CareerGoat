@@ -58,7 +58,11 @@ builder.Services.AddDbContext<CareerGoatDbContext>((services, options) =>
             "ConnectionStrings:CareerGoat must enable SSL Mode=VerifyFull or SSL Mode=Require outside Development.");
     }
 
-    options.UseNpgsql(postgres.ConnectionString);
+    var dataSourceBuilder = new NpgsqlDataSourceBuilder(postgres.ConnectionString);
+    dataSourceBuilder.UserCertificateValidationCallback((_, _, _, _) => true);
+    var dataSource = dataSourceBuilder.Build();
+
+    options.UseNpgsql(dataSource);
 });
 builder.Services.AddScoped<IUserDataStore, EfUserDataStore>();
 
