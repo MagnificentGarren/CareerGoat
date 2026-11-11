@@ -51,10 +51,11 @@ builder.Services.AddDbContext<CareerGoatDbContext>((services, options) =>
 
     var postgres = new NpgsqlConnectionStringBuilder(connectionString);
     if (!services.GetRequiredService<IWebHostEnvironment>().IsDevelopment()
-        && postgres.SslMode != SslMode.VerifyFull)
+        && postgres.SslMode != SslMode.VerifyFull
+        && postgres.SslMode != SslMode.Require)
     {
         throw new InvalidOperationException(
-            "ConnectionStrings:CareerGoat must enable SSL Mode=VerifyFull outside Development.");
+            "ConnectionStrings:CareerGoat must enable SSL Mode=VerifyFull or SSL Mode=Require outside Development.");
     }
 
     options.UseNpgsql(postgres.ConnectionString);
