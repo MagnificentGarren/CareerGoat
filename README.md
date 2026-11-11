@@ -111,8 +111,8 @@ For staging, follow [the staging setup and verification guide](./docs/STAGING.md
 The frontend reads the public `CAREERGOAT_API_BASE_URL` setting at build time;
 the API requires `ASPNETCORE_ENVIRONMENT=Staging` and the exact
 `Frontend__AllowedOrigins__0` origin in the API host settings. Neither value is
-a secret. A host-specific API deployment cannot be configured until a free
-.NET host is selected and verified.
+a secret. A Render Dockerfile is prepared for the staging API; review the
+current free-plan usage and overage terms before creating a Render service.
 
 ## Current status and next owner actions
 
