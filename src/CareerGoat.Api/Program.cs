@@ -59,7 +59,6 @@ builder.Services.AddDbContext<CareerGoatDbContext>((services, options) =>
     }
 
     var dataSourceBuilder = new NpgsqlDataSourceBuilder(postgres.ConnectionString);
-    dataSourceBuilder.UserCertificateValidationCallback((_, _, _, _) => true);
     var dataSource = dataSourceBuilder.Build();
 
     options.UseNpgsql(dataSource);
