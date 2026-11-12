@@ -1,1 +1,14 @@
 @import './app/landing-page.css';
+
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  background: #07111f;
+  color: #f5f7fb;
+  font-family: 'DM Sans', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
