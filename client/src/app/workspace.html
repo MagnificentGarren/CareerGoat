@@ -1,64 +1,120 @@
-<header class="topbar">
-  <a class="brand" routerLink="/" aria-label="CareerGoat home">Career<span>Goat</span></a>
-  @if (auth.session()) {
+@if (!auth.ready()) {
+  <main class="auth-loading" role="status">Restoring your secure session…</main>
+} @else if (!auth.session()) {
+  <header class="auth-topbar">
+    <a class="auth-brand" routerLink="/" aria-label="CareerGoat home"> Career<span>Goat</span> </a>
+    <a class="back-link" routerLink="/">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M19 12H5m7 7-7-7 7-7" />
+      </svg>
+      <span>Back to home</span>
+    </a>
+  </header>
+
+  <main class="auth-main">
+    <section class="auth-intro" aria-labelledby="auth-page-heading">
+      <p class="eyebrow">CareerGoat · Built for your next role</p>
+      <h1 id="auth-page-heading">
+        {{ isSignUp() ? 'Start your next move.' : 'Welcome back.' }}
+      </h1>
+      <p>
+        Keep your target roles organized and take the next step toward a more focused application.
+      </p>
+    </section>
+
+    <div class="auth-form-column">
+      <section class="auth-panel" aria-labelledby="auth-heading">
+        <h2 id="auth-heading">{{ isSignUp() ? 'Create your account' : 'Sign in' }}</h2>
+        @if (auth.configurationError()) {
+          <p class="message error" role="alert">{{ auth.configurationError() }}</p>
+        }
+        <button
+          class="google-button"
+          type="button"
+          (click)="signInWithGoogle()"
+          [disabled]="saving() || !!auth.configurationError()"
+        >
+          <svg class="google-mark" viewBox="0 0 48 48" aria-hidden="true">
+            <path
+              fill="#4285F4"
+              d="M43.6 24.5c0-1.6-.1-3.1-.4-4.5H24v8.5h11a9.4 9.4 0 0 1-4.1 6.2v5.5h6.7c3.9-3.6 6-9 6-15.7Z"
+            />
+            <path
+              fill="#34A853"
+              d="M24 44c5.5 0 10.1-1.8 13.5-4.8l-6.7-5.5c-1.8 1.2-4.1 2-6.8 2-5.2 0-9.6-3.5-11.2-8.2H5.9v5.7A20 20 0 0 0 24 44Z"
+            />
+            <path
+              fill="#FBBC05"
+              d="M12.8 27.5a12 12 0 0 1 0-7V14.8H5.9a20 20 0 0 0 0 18.4l6.9-5.7Z"
+            />
+            <path
+              fill="#EA4335"
+              d="M24 12.3c3 0 5.7 1 7.8 3.1l5.9-5.9A19.7 19.7 0 0 0 24 4 20 20 0 0 0 5.9 14.8l6.9 5.7c1.6-4.7 6-8.2 11.2-8.2Z"
+            />
+          </svg>
+          <span>{{ saving() ? 'Please wait…' : 'Continue with Google' }}</span>
+        </button>
+
+        <div class="auth-divider"><span>or continue with email</span></div>
+
+        <form class="auth-form" (ngSubmit)="submitAuth()">
+          <label for="email">Email</label>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            autocomplete="email"
+            [(ngModel)]="email"
+            required
+          />
+          <label for="password">Password</label>
+          <input
+            id="password"
+            name="password"
+            type="password"
+            [attr.autocomplete]="isSignUp() ? 'new-password' : 'current-password'"
+            minlength="8"
+            [(ngModel)]="password"
+            required
+          />
+          <button type="submit" [disabled]="saving() || !!auth.configurationError()">
+            {{ saving() ? 'Please wait…' : isSignUp() ? 'Create account' : 'Sign in' }}
+          </button>
+        </form>
+        <button class="text-button" type="button" (click)="isSignUp.set(!isSignUp())">
+          {{ isSignUp() ? 'Already have an account? Sign in' : 'New here? Create an account' }}
+        </button>
+      </section>
+
+      @if (errorMessage()) {
+        <p class="message error auth-message" role="alert">{{ errorMessage() }}</p>
+      }
+      @if (statusMessage()) {
+        <p class="message success auth-message" role="status">{{ statusMessage() }}</p>
+      }
+      <p class="auth-footnote">
+        Your profile and target roles are available only to your signed-in account.
+      </p>
+    </div>
+  </main>
+} @else {
+  <header class="topbar">
+    <a class="brand" routerLink="/" aria-label="CareerGoat home">Career<span>Goat</span></a>
     <nav aria-label="Workspace navigation">
       <a routerLink="/app" aria-current="page">Workspace</a>
       <a routerLink="/about">About</a>
       <a routerLink="/guide">Guide</a>
     </nav>
-  } @else {
-    <span class="phase-label">Your next move starts here</span>
-  }
-</header>
+  </header>
 
-<main class="panel">
-  <p class="eyebrow">CareerGoat workspace</p>
-  <h1>Build your next move.</h1>
-  <p class="intro">
-    Save your profile and target roles in a private workspace. Your records are only available to
-    your signed-in account.
-  </p>
+  <main class="panel workspace-panel">
+    <p class="eyebrow">CareerGoat workspace</p>
+    <h1>Build your next move.</h1>
+    <p class="intro">
+      Save your profile and target roles in a private workspace. Your records are only available to
+      your signed-in account.
+    </p>
 
-  @if (!auth.ready()) {
-    <p role="status">Restoring your secure session…</p>
-  } @else if (!auth.session()) {
-    <section class="card auth-card" aria-labelledby="auth-heading">
-      <h2 id="auth-heading">{{ isSignUp() ? 'Create your account' : 'Sign in' }}</h2>
-      @if (auth.configurationError()) {
-        <p class="message error" role="alert">{{ auth.configurationError() }}</p>
-      }
-      <form (ngSubmit)="submitAuth()">
-        <label for="email">Email</label>
-        <input
-          id="email"
-          name="email"
-          type="email"
-          autocomplete="email"
-          [(ngModel)]="email"
-          required
-        />
-        <label for="password">Password</label>
-        <input
-          id="password"
-          name="password"
-          type="password"
-          [attr.autocomplete]="isSignUp() ? 'new-password' : 'current-password'"
-          [(ngModel)]="password"
-          minlength="8"
-          required
-        />
-        <button type="submit" [disabled]="saving() || !!auth.configurationError()">
-          {{ saving() ? 'Please wait…' : isSignUp() ? 'Create account' : 'Sign in' }}
-        </button>
-      </form>
-      <button class="secondary" type="button" (click)="signInWithGoogle()">
-        Continue with Google
-      </button>
-      <button class="text-button" type="button" (click)="isSignUp.set(!isSignUp())">
-        {{ isSignUp() ? 'Already have an account? Sign in' : 'New here? Create an account' }}
-      </button>
-    </section>
-  } @else {
     <div class="workspace-heading">
       <div>
         <p class="eyebrow">Signed in</p>
@@ -161,29 +217,32 @@
         }
       </section>
     }
-  }
 
-  @if (errorMessage()) {
-    <p class="message error" role="alert">{{ errorMessage() }}</p>
-  }
-  @if (statusMessage()) {
-    <p class="message success" role="status">{{ statusMessage() }}</p>
-  }
+    @if (errorMessage()) {
+      <p class="message error" role="alert">{{ errorMessage() }}</p>
+    }
+    @if (statusMessage()) {
+      <p class="message success" role="status">{{ statusMessage() }}</p>
+    }
 
-  <section class="status" aria-labelledby="status-heading">
-    <h2 id="status-heading">Service status</h2>
-    <ul>
-      <li>
-        <span>API health</span>
-        <a [href]="apiHealthUrl" target="_blank" rel="noopener noreferrer">Open health endpoint</a>
-        <strong aria-live="polite">{{ apiHealthStatus() }}</strong>
-      </li>
-      <li><span>AI provider</span><strong>Fake · no external calls</strong></li>
-    </ul>
-  </section>
+    <section class="status" aria-labelledby="status-heading">
+      <h2 id="status-heading">Service status</h2>
+      <ul>
+        <li>
+          <span>API health</span>
+          <a [href]="apiHealthUrl" target="_blank" rel="noopener noreferrer"
+            >Open health endpoint</a
+          >
+          <strong aria-live="polite">{{ apiHealthStatus() }}</strong>
+        </li>
+        <li><span>AI provider</span><strong>Fake · no external calls</strong></li>
+      </ul>
+    </section>
 
-  <p class="note">
-    Account deletion is not available in this phase. Target-role deletion removes only the selected
-    role; account-wide data deletion expectations must be confirmed before that flow is added.
-  </p>
-</main>
+    <p class="note">
+      Account deletion is not available in this phase. Target-role deletion removes only the
+      selected role; account-wide data deletion expectations must be confirmed before that flow is
+      added.
+    </p>
+  </main>
+}

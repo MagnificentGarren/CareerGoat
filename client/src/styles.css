@@ -12,3 +12,20 @@ body {
   font-family: 'DM Sans', sans-serif;
   -webkit-font-smoothing: antialiased;
 }
+
+body.auth-page {
+  position: relative;
+  isolation: isolate;
+  overflow-x: hidden;
+}
+
+body.auth-page::before {
+  position: fixed;
+  z-index: -1;
+  inset: 0;
+  content: '';
+  background:
+    linear-gradient(90deg, rgba(7, 17, 31, 0.9), rgba(7, 17, 31, 0.65) 50%, rgba(7, 17, 31, 0.72)),
+    linear-gradient(0deg, rgba(7, 17, 31, 0.45), rgba(7, 17, 31, 0.15)),
+    url('/careergoat-background.png') center 54% / cover no-repeat;
+}

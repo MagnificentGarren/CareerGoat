@@ -1,4 +1,5 @@
-import { Component, effect, inject, signal } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import { Component, effect, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
@@ -12,7 +13,9 @@ import { Profile, TargetRole, TargetRoleRequest, TargetRoleService } from './tar
   styleUrl: './workspace.css',
   templateUrl: './workspace.html',
 })
-export class Workspace {
+export class Workspace implements OnDestroy, OnInit {
+  private readonly document = inject(DOCUMENT);
+  private healthCheckStarted = false;
   private readonly apiHealth = inject(ApiHealthService);
   readonly auth = inject(AuthService);
   private readonly data = inject(TargetRoleService);
@@ -37,14 +40,17 @@ export class Workspace {
   private accountLoadId = 0;
 
   constructor() {
-    this.apiHealth.check().subscribe({
-      next: () => this.apiHealthStatus.set('Connected'),
-      error: () => this.apiHealthStatus.set('Unavailable — check the API URL and CORS settings'),
-    });
-
     effect(() => {
       if (!this.auth.ready()) return;
       if (this.auth.session()) {
+        if (!this.healthCheckStarted) {
+          this.healthCheckStarted = true;
+          this.apiHealth.check().subscribe({
+            next: () => this.apiHealthStatus.set('Connected'),
+            error: () =>
+              this.apiHealthStatus.set('Unavailable — check the API URL and CORS settings'),
+          });
+        }
         void this.loadAccountData();
       } else {
         this.accountLoadId++;
@@ -55,6 +61,16 @@ export class Workspace {
         this.editorOpen = false;
       }
     });
+  }
+
+  ngOnInit(): void {
+    if (this.router.url.startsWith('/auth')) {
+      this.document.body.classList.add('auth-page');
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.document.body.classList.remove('auth-page');
   }
 
   async submitAuth(): Promise<void> {
